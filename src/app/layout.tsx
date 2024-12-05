@@ -28,19 +28,19 @@ export const metadata: Metadata = {
   description: "Explore the world with EF Educational Tours.",
 };
 
-const cachedFetch = (input: any, init?: any): Promise<Response> => {
-  return fetch(input, {
-    ...init,
-    cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
-  });
-};
-
+// Configure Storyblok
 storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
     region: "ca",
-    fetch: cachedFetch,
+    // Ensures fresh data in development, cached in production
+    fetch: (input: any, init?: any): Promise<Response> => {
+      return fetch(input, {
+        ...init,
+        cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
+      });
+    },
   },
   components: {
     tour: Tour,
@@ -55,9 +55,9 @@ storyblokInit({
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <StoryblokProvider>
       <html lang="en" className="h-full scroll-smooth">
@@ -94,6 +94,36 @@ export default function RootLayout({
               </p>
             </div>
           </footer>
+
+          {/* Load the Storyblok Bridge script. 
+             In production, consider loading this only if "_storyblok" is present in the URL for performance. */}
+          <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
+
+          {/* Initialize the Storyblok Bridge if inside the Storyblok editor (_storyblok param present) */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  if (window.location.search.includes('_storyblok')) {
+                    const storyblokInstance = new window.StoryblokBridge();
+
+                    // Listen to events:
+                    // "input" = live content updates (no reload needed),
+                    // "published" or "change" = content saved/published, reload to fetch updated data
+                    storyblokInstance.on(['input', 'published', 'change'], (event) => {
+                      if (event.action === 'input') {
+                        console.log("Live content update:", event.story?.content);
+                        // No reload required; storyblokEditable components should reflect changes instantly.
+                      } else {
+                        // For published or change, reload to show the new draft/published state.
+                        location.reload(true);
+                      }
+                    });
+                  }
+                })();
+              `,
+            }}
+          />
         </body>
       </html>
     </StoryblokProvider>

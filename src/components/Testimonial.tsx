@@ -1,8 +1,10 @@
+import { storyblokEditable } from "@storyblok/react/rsc";
+
 export const Testimonial = ({ blok }: { blok: any }) => {
-    const stars = blok.rating ?? 5; // Use blok.rating or fallback to 5
+    const stars = blok.rating ?? 5;
   
     return (
-      <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+      <div {...storyblokEditable(blok)} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
         {/* Comment */}
         <p className="text-gray-700 italic mb-4">"{blok.comment}"</p>
   

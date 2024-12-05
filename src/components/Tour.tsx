@@ -1,10 +1,11 @@
 import { renderRichText } from "@storyblok/react";
+import { storyblokEditable } from "@storyblok/react/rsc";
 
 export const Tour = ({ blok }: { blok: any }) => {
   console.log("Props received by Tour component:", blok);
 
   return (
-    <div className="container mx-auto px-6 lg:px-8 py-12 space-y-12">
+    <div {...storyblokEditable(blok)} className="container mx-auto px-6 lg:px-8 py-12 space-y-12">
       {/* Tour Name */}
       <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
         {blok.name}
@@ -31,19 +32,16 @@ export const Tour = ({ blok }: { blok: any }) => {
 
       {/* Tour Details */}
       <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-        {/* Description */}
         {blok.description && (
           <p className="text-gray-700 leading-relaxed">{blok.description}</p>
         )}
 
-        {/* Location */}
         {blok.location && (
           <p className="text-gray-600">
             <strong>Location:</strong> {blok.location}
           </p>
         )}
 
-        {/* Price */}
         {blok.price && (
           <p className="text-green-600 text-xl font-bold">
             {Number(blok.price).toLocaleString("en-US", {

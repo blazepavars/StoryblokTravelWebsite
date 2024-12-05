@@ -1,6 +1,8 @@
+import { storyblokEditable } from "@storyblok/react/rsc";
+
 export const Feature = ({ blok }: { blok: any }) => {
     return (
-      <div className="bg-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-start">
+      <div {...storyblokEditable(blok)} className="bg-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-start">
         {/* Icon or Image */}
         {blok.icon && (
           <div className="mb-4">
