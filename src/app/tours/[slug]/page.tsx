@@ -1,16 +1,13 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { Tour } from "@/components/Tour";
-import { cookies } from "next/headers";
+import { draftMode } from "next/headers";
 
-const isPreview = () => {
-  const cookieStore = cookies();
-  return cookieStore.get("sb-preview")?.value === "1";
-};
+const mode = draftMode().isEnabled ? "draft" : "published";
 
 const fetchTourPage = async (slug: string) => {
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories/tours/${slug}`, {
-    version: isPreview() ? "draft" : "published",
+    version: mode,
   });
   return response.data.story;
 };
@@ -18,7 +15,7 @@ const fetchTourPage = async (slug: string) => {
 const fetchAllTourSlugs = async () => {
   const client = getStoryblokApi();
   const response = await client.get("cdn/stories", {
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    version: mode,
     content_type: "tour",
     starts_with: "tours/",
   });

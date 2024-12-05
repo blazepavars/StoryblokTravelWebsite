@@ -28,13 +28,11 @@ export const metadata: Metadata = {
   description: "Explore the world with EF Educational Tours.",
 };
 
-// Configure Storyblok
 storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
-    region: "ca",
-    // Ensures fresh data in development, cached in production
+    region: "ca", // Use your space's region, or remove if not needed
     fetch: (input: any, init?: any): Promise<Response> => {
       return fetch(input, {
         ...init,
@@ -64,7 +62,6 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
         >
-          {/* Header */}
           <header className="bg-blue-600 text-white shadow-lg">
             <nav className="container mx-auto flex justify-between items-center py-4 px-6">
               <Link href="/" className="text-2xl font-extrabold tracking-tight">
@@ -81,12 +78,10 @@ export default function RootLayout({
             </nav>
           </header>
 
-          {/* Main Content */}
           <main className="container mx-auto py-8 px-6 lg:px-12">
             {children}
           </main>
 
-          {/* Footer */}
           <footer className="bg-gray-900 text-gray-400 text-sm py-6">
             <div className="container mx-auto text-center">
               <p className="mb-2">
@@ -95,27 +90,18 @@ export default function RootLayout({
             </div>
           </footer>
 
-          {/* Load the Storyblok Bridge script. 
-             In production, consider loading this only if "_storyblok" is present in the URL for performance. */}
+          {/* Load Storyblok Bridge only in editor mode */}
           <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
-
-          {/* Initialize the Storyblok Bridge if inside the Storyblok editor (_storyblok param present) */}
           <script
             dangerouslySetInnerHTML={{
               __html: `
                 (function() {
                   if (window.location.search.includes('_storyblok')) {
                     const storyblokInstance = new window.StoryblokBridge();
-
-                    // Listen to events:
-                    // "input" = live content updates (no reload needed),
-                    // "published" or "change" = content saved/published, reload to fetch updated data
                     storyblokInstance.on(['input', 'published', 'change'], (event) => {
                       if (event.action === 'input') {
                         console.log("Live content update:", event.story?.content);
-                        // No reload required; storyblokEditable components should reflect changes instantly.
                       } else {
-                        // For published or change, reload to show the new draft/published state.
                         location.reload(true);
                       }
                     });
