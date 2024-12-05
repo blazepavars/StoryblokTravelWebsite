@@ -28,17 +28,19 @@ export const metadata: Metadata = {
   description: "Explore the world with EF Educational Tours.",
 };
 
+const cachedFetch = (input: any, init?: any): Promise<Response> => {
+  return fetch(input, {
+    ...init,
+    cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
+  });
+};
+
 storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
-    region: "ca", // If your space isn't in "ca", remove or change this line
-    fetch: (input: any, init?: any): Promise<Response> => {
-      return fetch(input, {
-        ...init,
-        cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
-      });
-    },
+    region: "ca",
+    fetch: cachedFetch,
   },
   components: {
     tour: Tour,
@@ -51,13 +53,18 @@ storyblokInit({
   },
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <StoryblokProvider>
       <html lang="en" className="h-full scroll-smooth">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
         >
+          {/* Header */}
           <header className="bg-blue-600 text-white shadow-lg">
             <nav className="container mx-auto flex justify-between items-center py-4 px-6">
               <Link href="/" className="text-2xl font-extrabold tracking-tight">
@@ -74,10 +81,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </nav>
           </header>
 
+          {/* Main Content */}
           <main className="container mx-auto py-8 px-6 lg:px-12">
             {children}
           </main>
 
+          {/* Footer */}
           <footer className="bg-gray-900 text-gray-400 text-sm py-6">
             <div className="container mx-auto text-center">
               <p className="mb-2">
@@ -86,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </footer>
 
-          {/* Load Storyblok Bridge only if in editor mode */}
+          {/* Load the Storyblok Bridge script for the Visual Editor */}
           <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
           <script
             dangerouslySetInnerHTML={{
@@ -94,6 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 (function() {
                   if (window.location.search.includes('_storyblok')) {
                     const storyblokInstance = new window.StoryblokBridge();
+
                     storyblokInstance.on(['input', 'published', 'change'], (event) => {
                       if (event.action === 'input') {
                         console.log("Live content update:", event.story?.content);
