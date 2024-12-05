@@ -1,9 +1,9 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
 
-export const Hero = ({ params }: { params: { blok: any } }) => {
+export const Hero = (params: any) => {
   return (
     <section
-      {...storyblokEditable(params.blok)}
+      {...storyblokEditable(params.blok)} // Use `blok` here, not `params.blok`
       className="bg-violet-500 text-white py-16"
     >
       <div className="container mx-auto px-4 text-center">
