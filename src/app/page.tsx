@@ -1,10 +1,13 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { Page } from "@/components/Page";
+import { draftMode } from "next/headers"; 
+
 
 const fetchHomePage = async () => {
+  const { isEnabled } = draftMode();
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories/home`, {
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    version: isEnabled ? "draft" : "published", // Use draft mode dynamically
     resolve_relations: "recommended_tours.tours",
   });
 
