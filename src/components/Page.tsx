@@ -1,5 +1,5 @@
-import { StoryblokComponent } from "@storyblok/react/rsc";
-import { storyblokEditable } from "@storyblok/react/rsc";
+"use client";
+import { StoryblokComponent, storyblokEditable } from "@storyblok/react";
 
 export const Page = (params: any) => {
   console.log("Params received by Page component:", params);

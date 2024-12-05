@@ -2,6 +2,8 @@ import { getStoryblokApi } from "@storyblok/react/rsc";
 import { Page } from "@/components/Page";
 import { draftMode } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 const fetchHomePage = async () => {
   const mode = draftMode().isEnabled ? "draft" : "published";
   const client = getStoryblokApi();

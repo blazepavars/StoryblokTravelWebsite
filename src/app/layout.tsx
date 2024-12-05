@@ -32,7 +32,7 @@ storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
-    region: "ca", // Use your space's region, or remove if not needed
+    region: "ca", // If your space isn't in "ca", remove or change this line
     fetch: (input: any, init?: any): Promise<Response> => {
       return fetch(input, {
         ...init,
@@ -51,11 +51,7 @@ storyblokInit({
   },
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <StoryblokProvider>
       <html lang="en" className="h-full scroll-smooth">
@@ -90,7 +86,7 @@ export default function RootLayout({
             </div>
           </footer>
 
-          {/* Load Storyblok Bridge only in editor mode */}
+          {/* Load Storyblok Bridge only if in editor mode */}
           <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
           <script
             dangerouslySetInnerHTML={{

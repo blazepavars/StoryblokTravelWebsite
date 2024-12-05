@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const slug = searchParams.get("slug") || "/";
+    const slug = searchParams.get("slug") || "/"; // Ensure slug is always a string
+    const baseUrl = request.headers.get("origin") ?? "https://storyblok-travel-website.vercel.app/"; // Ensure baseUrl is a string
 
     // Enable draft mode
     draftMode().enable();
 
-    // Redirect to the slug with `_storyblok=1` appended
-    const url = new URL(slug, `${request.headers.get("origin")}`);
+    const url = new URL(slug, baseUrl);
     url.searchParams.set("_storyblok", "1");
 
     return NextResponse.redirect(url);
