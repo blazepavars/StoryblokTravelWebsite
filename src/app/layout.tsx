@@ -28,19 +28,18 @@ export const metadata: Metadata = {
   description: "Explore the world with EF Educational Tours.",
 };
 
-const cachedFetch = (input: any, init?: any): Promise<Response> => {
-  return fetch(input, {
-    ...init,
-    cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
-  });
-};
-
 storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
     region: "ca",
-    fetch: cachedFetch,
+    // We can keep caching logic similar to original
+    fetch: (input: any, init?: any): Promise<Response> => {
+      return fetch(input, {
+        ...init,
+        cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache",
+      });
+    },
   },
   components: {
     tour: Tour,
@@ -53,18 +52,11 @@ storyblokInit({
   },
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <StoryblokProvider>
       <html lang="en" className="h-full scroll-smooth">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
-        >
-          {/* Header */}
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
           <header className="bg-blue-600 text-white shadow-lg">
             <nav className="container mx-auto flex justify-between items-center py-4 px-6">
               <Link href="/" className="text-2xl font-extrabold tracking-tight">
@@ -81,21 +73,17 @@ export default function RootLayout({
             </nav>
           </header>
 
-          {/* Main Content */}
           <main className="container mx-auto py-8 px-6 lg:px-12">
             {children}
           </main>
 
-          {/* Footer */}
           <footer className="bg-gray-900 text-gray-400 text-sm py-6">
             <div className="container mx-auto text-center">
-              <p className="mb-2">
-                &copy; 2024 Blaze Pavars. All rights reserved.
-              </p>
+              <p className="mb-2">&copy; 2024 Blaze Pavars. All rights reserved.</p>
             </div>
           </footer>
 
-          {/* Load the Storyblok Bridge script for the Visual Editor */}
+          {/* Load Storyblok Bridge if _storyblok in URL */}
           <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
           <script
             dangerouslySetInnerHTML={{
@@ -103,7 +91,6 @@ export default function RootLayout({
                 (function() {
                   if (window.location.search.includes('_storyblok')) {
                     const storyblokInstance = new window.StoryblokBridge();
-
                     storyblokInstance.on(['input', 'published', 'change'], (event) => {
                       if (event.action === 'input') {
                         console.log("Live content update:", event.story?.content);
