@@ -1,24 +1,18 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
-import { draftMode } from "next/headers";
 import { Page } from "@/components/Page";
 
 const fetchHomePage = async () => {
-  const { isEnabled } = draftMode(); // Check if draft mode is enabled
   const client = getStoryblokApi();
-  const response = await client.get(`cdn/stories`, {
-    version: isEnabled ? "draft" : "published",
-    starts_with: "", // Fetch the root story
+  const response = await client.get(`cdn/stories/home`, {
+    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    resolve_relations: "recommended_tours.tours",
   });
 
-  return response.data.stories?.[0]; // Return the first matching story
+  return response.data.story;
 };
 
 const HomePage = async () => {
   const story = await fetchHomePage();
-
-  if (!story) {
-    return <p>Page not found</p>; // Handle missing content gracefully
-  }
 
   return (
     <div>
