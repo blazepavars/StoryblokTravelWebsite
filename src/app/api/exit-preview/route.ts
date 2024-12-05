@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const response = NextResponse.redirect("/");
+export async function GET(request: Request) {
+  // Create an absolute URL for the redirection
+  const url = new URL("/", request.url);
 
-  // Correctly delete the 'sb-preview' cookie
+  const response = NextResponse.redirect(url);
+
+  // Delete the 'sb-preview' cookie
   response.cookies.set("sb-preview", "", { path: "/", maxAge: 0 });
 
   return response;
