@@ -1,4 +1,5 @@
-import { storyblokEditable, StoryblokComponent } from "@storyblok/react/rsc";
+"use client";
+import { StoryblokComponent, storyblokEditable } from "@storyblok/react";
 
 export const Page = (params: any) => {
   const blocks = params.blok?.blocks || [];
