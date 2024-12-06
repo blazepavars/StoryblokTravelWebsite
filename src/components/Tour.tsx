@@ -1,4 +1,4 @@
-import { renderRichText } from "@storyblok/react";
+import { renderRichText } from "@storyblok/react/rsc";
 import { storyblokEditable } from "@storyblok/react/rsc";
 
 export const Tour = ({ blok }: { blok: any }) => {

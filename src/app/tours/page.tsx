@@ -1,11 +1,14 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { Page } from "@/components/Page";
 import { RecommendedTour } from "@/components/RecommendedTour";
+import { draftMode } from "next/headers";
 
 const fetchToursPage = async () => {
+  const { isEnabled } = draftMode();
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories/tours`, {
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    version: process.env.NODE_ENV === "development" || isEnabled 
+    ? "draft" : "published",
     resolve_relations: "recommended_tours.tours",
   });
 
@@ -14,10 +17,12 @@ const fetchToursPage = async () => {
 };
 
 const fetchAllTours = async () => {
+  const { isEnabled } = draftMode ();
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories`, {
     content_type: "tour",
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    version: process.env.NODE_ENV === "development" || isEnabled 
+    ? "draft" : "published",
     starts_with: "tours/", // Fetches all stories under "tours"
   });
 
