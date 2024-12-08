@@ -8,8 +8,8 @@ export const Testimonial = ({ blok }: { blok: any }) => {
     <div {...storyblokEditable(blok)} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
       <p className="text-gray-700 italic mb-4">"{blok.comment}"</p>
       <p className="text-blue-900 font-semibold text-right">- {blok.name}</p>
-      <div className="mt-4 flex">
-        {Array.from({ length: 5 }, (_, index) => (
+      <div className="mt-1 flex">
+        {Array.from({ length: 5 }, (f, index) => (
           <svg
             key={index}
             xmlns="http://www.w3.org/2000/svg"
