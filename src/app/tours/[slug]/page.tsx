@@ -1,31 +1,21 @@
-import { getStoryblokApi, StoryblokStory } from "@storyblok/react/rsc";
+import { getStoryblokApi } from "@storyblok/react/rsc";
 import { draftMode } from "next/headers";
 
-export const generateStaticParams = async () => {
-  const client = getStoryblokApi();
-  const response = await client.getStories({
-    content_type: "tour",
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
-  });
+export const dynamic = "force-dynamic";
 
-  return response.data.stories.map((story) => ({ slug: story.slug }));
-};
-
-const fetchTourPage = async (slug: string) => {
-  const { isEnabled } = draftMode();
+const fetchTourData = async (slug: string) => {
+  const mode = draftMode().isEnabled ? "draft" : "published";
   const client = getStoryblokApi();
-  const response = await client.getStory(`tours/${slug}`, {
-    version:
-      process.env.NODE_ENV === "development" || isEnabled
-        ? "draft"
-        : "published",
-  });
+  const response = await client.get(`cdn/stories/tours/${slug}`, { version: mode });
   return response.data.story;
 };
 
-const TourPage = async (props: any) => {
-  const story = await fetchTourPage(props.params.slug);
-  return <StoryblokStory story={story} />;
+const ToursPage = async ({ params }: { params: { slug: string } }) => {
+  const story = await fetchTourData(params.slug);
+  if (!story) {
+    return <p>Tour not found.</p>;
+  }
+  return <div>{/* Render your tour using draft/published data as needed */}</div>;
 };
 
-export default TourPage;
+export default ToursPage;
