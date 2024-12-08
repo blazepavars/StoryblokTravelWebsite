@@ -1,3 +1,4 @@
+// src/components/RecommendedTours.tsx
 import { RecommendedTour } from "./RecommendedTour";
 import { storyblokEditable } from "@storyblok/react/rsc";
 

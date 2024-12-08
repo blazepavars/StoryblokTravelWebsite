@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -33,7 +34,6 @@ storyblokInit({
   use: [apiPlugin],
   apiOptions: {
     region: "ca",
-    // We can keep caching logic similar to original
     fetch: (input: any, init?: any): Promise<Response> => {
       return fetch(input, {
         ...init,
@@ -86,27 +86,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Load Storyblok Bridge if _storyblok in URL */}
           <script src="//app.storyblok.com/f/storyblok-v2-latest.js" async></script>
           <script
-  dangerouslySetInnerHTML={{
-    __html: `
-      (function() {
-        if (window.location.search.includes('_storyblok')) {
-          if (typeof window.StoryblokBridge !== "undefined") {
-            const storyblokInstance = new window.StoryblokBridge();
-            storyblokInstance.on(['input', 'published', 'change'], (event) => {
-              if (event.action === 'input') {
-                console.log("Live content update:", event.story?.content);
-              } else {
-                location.reload(true);
-              }
-            });
-          } else {
-            console.error("StoryblokBridge is not defined.");
-          }
-        }
-      })();
-    `,
-  }}
-/>
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  if (window.location.search.includes('_storyblok')) {
+                    const storyblokInstance = new window.StoryblokBridge();
+                    storyblokInstance.on(['input', 'published', 'change'], (event) => {
+                      if (event.action === 'input') {
+                        console.log("Live content update:", event.story?.content);
+                      } else {
+                        location.reload(true);
+                      }
+                    });
+                  }
+                })();
+              `,
+            }}
+          />
         </body>
       </html>
     </StoryblokProvider>

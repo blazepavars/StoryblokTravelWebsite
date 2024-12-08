@@ -1,9 +1,9 @@
+// src/components/Feature.tsx
 import { storyblokEditable } from "@storyblok/react/rsc";
 
 export const Feature = ({ blok }: { blok: any }) => {
     return (
       <div {...storyblokEditable(blok)} className="bg-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col items-start">
-        {/* Icon or Image */}
         {blok.icon && (
           <div className="mb-4">
             <img
@@ -13,13 +13,10 @@ export const Feature = ({ blok }: { blok: any }) => {
             />
           </div>
         )}
-        {/* Headline */}
         <h3 className="text-xl font-bold text-blue-900 mb-2">
           {blok.headline}
         </h3>
-        {/* Content */}
         <p className="text-gray-700 mb-4">{blok.content}</p>
-        {/* Call to Action */}
         {blok.cta && blok.cta_link && (
           <a
             href={blok.cta_link}
@@ -30,4 +27,4 @@ export const Feature = ({ blok }: { blok: any }) => {
         )}
       </div>
     );
-  };
+};

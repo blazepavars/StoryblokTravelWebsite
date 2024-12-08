@@ -1,28 +1,34 @@
+// src/app/tours/page.tsx
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { Page } from "@/components/Page";
 import { RecommendedTour } from "@/components/RecommendedTour";
+import { draftMode } from "next/headers";
 
 const fetchToursPage = async () => {
+  const isDraft = draftMode().isEnabled;
+  const version = isDraft ? "draft" : "published";
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories/tours`, {
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+    version,
     resolve_relations: "recommended_tours.tours",
   });
 
-  console.log("Fetched Tours page:", JSON.stringify(response.data.story, null, 2)); // Debugging
+  console.log("Fetched Tours page:", JSON.stringify(response.data.story, null, 2));
   return response.data.story;
 };
 
 const fetchAllTours = async () => {
+  const isDraft = draftMode().isEnabled;
+  const version = isDraft ? "draft" : "published";
   const client = getStoryblokApi();
   const response = await client.get(`cdn/stories`, {
     content_type: "tour",
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
-    starts_with: "tours/", // Fetches all stories under "tours"
+    version,
+    starts_with: "tours/", 
   });
 
-  console.log("Fetched all tours:", JSON.stringify(response.data.stories, null, 2)); // Debugging
-  return response.data.stories; // Returns an array of stories
+  console.log("Fetched all tours:", JSON.stringify(response.data.stories, null, 2));
+  return response.data.stories;
 };
 
 const ToursPage = async () => {
@@ -45,15 +51,12 @@ const ToursPage = async () => {
     );
   }
 
-  console.log("Story passed to Page component:", JSON.stringify(story.content, null, 2)); // Debugging
-  console.log("All tours passed to RecommendedTour:", JSON.stringify(tours, null, 2)); // Debugging
+  console.log("Story passed to Page component:", JSON.stringify(story.content, null, 2));
+  console.log("All tours passed to RecommendedTour:", JSON.stringify(tours, null, 2));
 
   return (
     <div className="py-12 bg-gray-50">
-      {/* Render Page Content */}
       <Page blok={story.content} />
-
-      {/* Recommended Tours Section */}
       <section className="container mx-auto px-6 lg:px-8 mt-8">
         <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-8">
           Explore Our Tours
