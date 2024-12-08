@@ -4,6 +4,9 @@ import { storyblokEditable } from "@storyblok/react/rsc";
 export const Grid = ({ blok }: { blok: any }) => {
   return (
     <section {...storyblokEditable(blok)} className="py-12 bg-gray-50">
+      {blok._editable && (
+        <div dangerouslySetInnerHTML={{ __html: blok._editable }} />
+      )}
       <div className="container mx-auto px-6 lg:px-8">
         <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-8">
           {blok.headline}
