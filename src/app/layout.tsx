@@ -23,6 +23,7 @@ storyblokInit({
   accessToken: process.env.STORYBLOK_TOKEN,
   use: [apiPlugin],
   apiOptions: {
+    region: "ca",
     fetch: cachedFetch,
   },
 });
