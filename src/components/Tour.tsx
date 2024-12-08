@@ -1,54 +1,57 @@
-// src/components/Tour.tsx
-import { renderRichText } from "@storyblok/react";
-import { storyblokEditable } from "@storyblok/react/rsc";
+import {
+  renderRichText,
+  storyblokEditable,
+  ISbNode,
+  RichTextSchema,
+} from "@storyblok/react/rsc";
+import Image from "next/image";
 
-export const Tour = ({ blok }: { blok: any }) => {
-  console.log("Props received by Tour component:", blok);
-
+export const Tour = (props: any) => {
   return (
-    <div {...storyblokEditable(blok)} className="container mx-auto px-6 lg:px-8 py-12 space-y-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-        {blok.name}
-      </h1>
-
-      {blok.body && (
-        <div
-          className="prose md:prose-lg mx-auto text-gray-700 max-w-3xl"
-          dangerouslySetInnerHTML={{ __html: renderRichText(blok.body) }}
-        ></div>
-      )}
-
-      {blok.main_image?.filename && (
-        <div className="flex justify-center mb-8">
-          <img
-            src={blok.main_image.filename}
-            alt={blok.name}
-            className="w-full max-w-4xl h-auto rounded-lg shadow-md"
-          />
-        </div>
-      )}
-
-      <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-        {blok.description && (
-          <p className="text-gray-700 leading-relaxed">{blok.description}</p>
-        )}
-
-        {blok.location && (
-          <p className="text-gray-600">
-            <strong>Location:</strong> {blok.location}
-          </p>
-        )}
-
-        {blok.price && (
-          <p className="text-green-600 text-xl font-bold">
-            {Number(blok.price).toLocaleString("en-US", {
-              style: "currency",
-              currency: "CAD",
-              minimumFractionDigits: 0,
-            })}
-          </p>
-        )}
-      </div>
-    </div>
+    <main
+      {...storyblokEditable(props.blok)}
+      className="container mx-auto px-4 w-full pt-32 pb-16"
+    >
+      <h1 className="text-3xl md:text-5xl font-bold">{props.blok.name}</h1>
+      <Image
+        className="mt-12"
+        src={props.blok.main_image.filename}
+        alt={props.blok.main_image.alt}
+        width={props.blok.main_image.filename.split("/")[5].split("x")[0]}
+        height={props.blok.main_image.filename.split("/")[5].split("x")[1]}
+        sizes="(max-width: 1538px) 100vw, 1504px"
+        priority={true}
+      />
+      <p className="mt-12 text-lg md:text-2xl md:leading-relaxed">
+        {props.blok.introduction}
+      </p>
+      <div
+        className="prose md:prose-lg mt-16 max-w-none"
+        dangerouslySetInnerHTML={{
+          __html: renderRichText(props.blok.body, {
+            schema: {
+              ...RichTextSchema,
+              nodes: {
+                ...RichTextSchema.nodes,
+                image: (node: ISbNode) => ({
+                  singleTag: [
+                    {
+                      tag: "img",
+                      attrs: {
+                        src: `${node.attrs.src}/m/1504x0/filters:quality(75)`,
+                        alt: node.attrs.alt,
+                        loading: "lazy",
+                        width: node.attrs.src.split("/")[5].split("x")[0],
+                        height: node.attrs.src.split("/")[5].split("x")[1],
+                      },
+                    },
+                  ],
+                }),
+              },
+            },
+          }),
+        }}
+      ></div>
+    </main>
   );
 };

@@ -1,15 +1,15 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
 
-export const Hero = ({ blok }: { blok: any }) => {
+export const Hero = (params: any) => {
   return (
-    <section {...storyblokEditable(blok)} className="bg-violet-500 text-white py-16">
-      {blok._editable && (
-        <div dangerouslySetInnerHTML={{ __html: blok._editable }} />
-      )}
-      <div className="container mx-auto px-4 text-center">
-        <h1 className="text-5xl font-extrabold mb-6">{blok.headline}</h1>
-        <p className="text-xl max-w-2xl mx-auto">{blok.content}</p>
-      </div>
+    <section
+      {...storyblokEditable(params.blok)}
+      className="container mx-auto px-4 w-full pt-32 pb-16"
+    >
+      <h1 className="text-center text-5xl md:text-7xl font-bold">
+        {params.blok.headline}
+      </h1>
+      <p className="text-center text-xl mt-8">{params.blok.content}</p>
     </section>
   );
 };

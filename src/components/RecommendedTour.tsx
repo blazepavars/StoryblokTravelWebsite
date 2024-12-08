@@ -1,47 +1,36 @@
-// src/components/RecommendedTour.tsx
 import Link from "next/link";
 
-export const RecommendedTour = ({ story }: { story: any }) => {
+export const RecommendedTour = (props: any) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="p-6">
-        {story.content.main_image?.filename && (
-          <img
-            src={story.content.main_image.filename}
-            alt={story.content.name}
-            className="w-full h-48 object-cover rounded-lg mb-4"
-          />
-        )}
-        <h3 className="text-lg font-bold text-gray-900 hover:text-blue-600 transition-colors duration-300">
-          {story.content.name}
-        </h3>
-        {story.content.location && (
-          <p className="text-sm text-gray-600 mt-1">
-            Location: {story.content.location}
-          </p>
-        )}
-        {story.content.price && (
-          <p className="text-green-600 font-semibold mt-2">
-            {Number(story.content.price).toLocaleString("en-US", {
+    <div className="bg-white rounded-sm shadow">
+      <img
+        className="aspect-video object-cover w-full"
+        src={`${props.story.content.main_image.filename}/m/736x414/filters:quality(70)`}
+        width={736}
+        height={414}
+        alt={props.story.content.main_image.alt}
+        loading={"lazy"}
+      />
+      <div className="p-8">
+        <div className="flex gap-4 justify-between text-lg font-bold">
+          <h3>{props.story.content.name}</h3>
+          <p>
+            {Number(props.story.content.price).toLocaleString("en-US", {
               style: "currency",
-              currency: "CAD",
+              currency: "TWD",
               minimumFractionDigits: 0,
             })}
           </p>
-        )}
-        {story.content.description && (
-          <p className="text-gray-600 mt-2 line-clamp-2">
-            {story.content.description}
-          </p>
-        )}
-        <div className="mt-4">
-          <Link
-            href={`/${story.full_slug}`}
-            className="inline-block px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-colors duration-300"
-          >
-            View Tour
-          </Link>
         </div>
+        <p className="text-gray-700 uppercase font-bold mt-2 text-sm tracking-wide">
+          {props.story.content.location}, Taiwan
+        </p>
+        <Link
+          className="font-bold text-base mt-8 block underline"
+          href={`/${props.story.full_slug}`}
+        >
+          View Tour
+        </Link>
       </div>
     </div>
   );
