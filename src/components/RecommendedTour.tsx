@@ -17,13 +17,13 @@ export const RecommendedTour = (props: any) => {
           <p>
             {Number(props.story.content.price).toLocaleString("en-US", {
               style: "currency",
-              currency: "TWD",
+              currency: "CAD",
               minimumFractionDigits: 0,
             })}
           </p>
         </div>
         <p className="text-gray-700 uppercase font-bold mt-2 text-sm tracking-wide">
-          {props.story.content.location}, Taiwan
+          {props.story.content.location}, CANADA
         </p>
         <Link
           className="font-bold text-base mt-8 block underline"
