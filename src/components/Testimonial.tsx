@@ -1,13 +1,13 @@
 // src/components/Testimonial.tsx
 import { storyblokEditable } from "@storyblok/react/rsc";
 
-export const Testimonial = (params: any) => {
-  const stars = params.blok.rating ?? 5;
+export const Testimonial = ({ blok }: { blok: any }) => {
+  const stars = blok.rating ?? 5;
 
   return (
-    <div {...storyblokEditable(params.blok)} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-      <p className="text-gray-700 italic mb-4">"{params.blok.comment}"</p>
-      <p className="text-blue-900 font-semibold text-right">- {params.blok.name}</p>
+    <div {...storyblokEditable(blok)} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+      <p className="text-gray-700 italic mb-4">"{blok.comment}"</p>
+      <p className="text-blue-900 font-semibold text-right">- {blok.name}</p>
       <div className="mt-4 flex">
         {Array.from({ length: 5 }, (_, index) => (
           <svg
